@@ -1,0 +1,16 @@
+# Data
+/data
+/logs
+
+# Virtual Env
+/ibkr
+
+# Trading
+config.py
+trading/algorithm.py
+
+# Analyses
+format.json
+
+# Cache
+__pycache__
