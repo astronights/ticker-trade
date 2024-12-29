@@ -37,6 +37,8 @@ Create a virtual environment if necessary
 
 ## Usage
 
+> **NOTE**: The `config.py` and the `trading/algorithm.py` in this section need to be manually created. These are not committed to avoid open sourcing proprietary trading algorithms.
+
 1. **Configure the project**
 
 Ensure that your Interactive Brokers account credentials and desired trading parameters are correctly set in the `config.py`.
@@ -103,6 +105,14 @@ def run_trade(ib: IB, stock: Stock, opening: dict = None, metrics: dict = None, 
         buy_trade = place_limit_order(ib, stock, 'BUY', purchase_quantity, latest_price)
 
         time.sleep(5) # Poll interval
+```
+
+4. **Run the script**
+
+Run the script with Python.
+
+```bash
+python main.py
 ```
 
 ## Project Structure
