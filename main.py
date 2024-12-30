@@ -60,6 +60,11 @@ def trading_loop():
         while True:
             dt_now = datetime.now(config.TZ_LOCAL).astimezone(config.TZ_MARKET)
 
+            position = [x for x in ib.positions() if x.contract.symbol == config.STOCK_SYMBOL]
+            quantity = position[0].position if position else None
+            price = position[0].avgCost if position else None
+            logging.info(f'Existing Position: {quantity} @ {price}')
+
             if not is_within_market_hours(config, dt_now):
                 logging.info("Market is closed. Sleeping for 60 seconds.")
                 time.sleep(60)
@@ -69,10 +74,6 @@ def trading_loop():
             #     opening_prices = get_live(ib, stock, dt_now, 5)
             #     append_live_csv(opening_prices, 'data/first_five.csv')
             #     metrics = compute_metrics(hist_data, opening_prices)
-
-            # position = [x for x in ib.positions() if x.contract.symbol == config.STOCK_SYMBOL]
-            # quantity = position[0].position if position else None
-            # price = position[0].position if position else None
 
             # trade(stock, ib, opening_prices, metrics, quantity, price)
             run_trade(ib, stock)
