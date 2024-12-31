@@ -37,10 +37,12 @@ async def _calculate_live_average_price(ib: IB, stock: Stock, seconds: int = 60)
 
             if tick_data.last is not None and tick_data.lastSize is not None:
                 cur_price = tick_data.last
+                cur_volume = tick_data.lastSize
+
                 prices.append(cur_price)
 
-                total_price_volume += cur_price * tick_data.lastSize
-                total_volume += tick_data.lastSize
+                total_volume += cur_volume
+                total_price_volume += cur_price * cur_volume
 
         ticker = ib.reqMktData(stock, '', False, False)
         ticker.updateEvent += on_tick_data
@@ -54,10 +56,10 @@ async def _calculate_live_average_price(ib: IB, stock: Stock, seconds: int = 60)
             average_price = total_price_volume / total_volume
             volatility = statistics.stdev(prices) if len(prices) > 1 else 0.0
             logging.info(f"{seconds} second VWAP: {average_price:.2f}, Volatility: {volatility:.2f}")
-            return round(average_price, 2), round(volatility, 2)
+            return (round(average_price, 2), round(volatility, 2))
         else:
             logging.warning("No trades occurred in the last minute.")
-            return None
+            return (None, None)
 
     except Exception as e:
         logging.error(f"Error calculating {seconds} second average price: {e}")
